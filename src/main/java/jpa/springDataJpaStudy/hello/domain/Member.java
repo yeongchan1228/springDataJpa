@@ -1,4 +1,4 @@
-package jpa.hello.domain;
+package jpa.springDataJpaStudy.hello.domain;
 
 import lombok.Getter;
 import lombok.Setter;

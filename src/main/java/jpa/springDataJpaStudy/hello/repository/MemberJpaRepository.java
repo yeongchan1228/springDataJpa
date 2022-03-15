@@ -1,6 +1,6 @@
-package jpa.hello.repository;
+package jpa.springDataJpaStudy.hello.repository;
 
-import jpa.hello.domain.Member;
+import jpa.springDataJpaStudy.hello.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
