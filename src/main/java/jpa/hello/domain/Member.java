@@ -15,4 +15,11 @@ public class Member {
     private Long id;
 
     private String username;
+
+    protected Member(){  // Entity는 기본 생성자가 하나 필요하다.
+    }
+
+    public Member(String username) {
+        this.username = username;
+    }
 }
