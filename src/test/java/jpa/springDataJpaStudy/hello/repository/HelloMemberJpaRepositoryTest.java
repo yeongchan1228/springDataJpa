@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @Rollback(value = false)
-public class MemberJpaRepositoryTest {
+public class HelloMemberJpaRepositoryTest {
 
     @Autowired
     HelloMemberJpaRepository memberJpaRepository;

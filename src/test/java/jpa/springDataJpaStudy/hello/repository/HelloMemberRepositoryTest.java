@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @Rollback(value = false) // false로 적용해 데이터 베이스 초기화 방지
-class MemberRepositoryTest {
+class HelloMemberRepositoryTest {
 
     @Autowired
     HelloMemberRepository memberRepository;
