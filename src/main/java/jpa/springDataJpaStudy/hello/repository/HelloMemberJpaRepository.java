@@ -1,6 +1,6 @@
 package jpa.springDataJpaStudy.hello.repository;
 
-import jpa.springDataJpaStudy.hello.domain.Member;
+import jpa.springDataJpaStudy.hello.domain.HelloMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -8,17 +8,17 @@ import javax.persistence.EntityManager;
 
 @Repository
 @RequiredArgsConstructor
-public class MemberJpaRepository {
+public class HelloMemberJpaRepository {
 
     private final EntityManager em;
 
-    public Member save(Member member){
+    public HelloMember save(HelloMember member){
         em.persist(member);
 
         return member;
     }
 
-    public Member find(Long id){
-        return em.find(Member.class, id);
+    public HelloMember find(Long id){
+        return em.find(HelloMember.class, id);
     }
 }

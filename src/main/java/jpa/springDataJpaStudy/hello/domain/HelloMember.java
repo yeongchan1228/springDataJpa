@@ -9,17 +9,17 @@ import javax.persistence.Id;
 
 @Entity
 @Getter @Setter
-public class Member {
+public class HelloMember {
 
     @Id @GeneratedValue
     private Long id;
 
     private String username;
 
-    protected Member(){  // Entity는 기본 생성자가 하나 필요하다.
+    protected HelloMember(){  // Entity는 기본 생성자가 하나 필요하다.
     }
 
-    public Member(String username) {
+    public HelloMember(String username) {
         this.username = username;
     }
 }

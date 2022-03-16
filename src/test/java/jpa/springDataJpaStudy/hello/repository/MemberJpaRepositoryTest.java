@@ -1,6 +1,6 @@
 package jpa.springDataJpaStudy.hello.repository;
 
-import jpa.springDataJpaStudy.hello.domain.Member;
+import jpa.springDataJpaStudy.hello.domain.HelloMember;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,14 +15,14 @@ import static org.assertj.core.api.Assertions.*;
 public class MemberJpaRepositoryTest {
 
     @Autowired
-    MemberJpaRepository memberJpaRepository;
+    HelloMemberJpaRepository memberJpaRepository;
 
     @Test
     public void testMember() {
-        Member member = new Member("memberA");
+        HelloMember member = new HelloMember("memberA");
 
-        Member savedMember = memberJpaRepository.save(member);
-        Member findMember = memberJpaRepository.find(savedMember.getId());
+        HelloMember savedMember = memberJpaRepository.save(member);
+        HelloMember findMember = memberJpaRepository.find(savedMember.getId());
 
         assertThat(findMember.getId()).isEqualTo(member.getId());
         assertThat(findMember.getUsername()).isEqualTo(member.getUsername());
