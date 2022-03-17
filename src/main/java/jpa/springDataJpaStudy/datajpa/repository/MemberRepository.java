@@ -2,6 +2,9 @@ package jpa.springDataJpaStudy.datajpa.repository;
 
 import jpa.springDataJpaStudy.datajpa.domain.Member;
 import jpa.springDataJpaStudy.datajpa.repository.dto.MemberDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -60,5 +63,18 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findListByUsername(String username); // 리스트 조회
     Member findMemberByUsername(String username); // 단건 조회
     Optional<Member> findOptionalByUsername(String username); // Optional 단건 조회
+
+    /**
+     * paging, slice
+     * Page는 Total count도 같이 받아온다, Total count까지 같이 받아오는 거라 성능이 느리다.
+     * Slice는 Total count X, limit 보다 한 개 더 가져 온다. -> 실제 결과 리스트에는 없다.
+     */
+    List<Member> findTop3ByAge(int age);
+    List<Member> findListByAge(int age, Pageable pageable);
+    //일반 쿼리와 카운트 쿼리 분리, 분리하지 않으면 카운트 쿼리도 조인이 발생한다.
+//    @Query(value = "select m from Member m left join m.team t", countQuery = "select count(m) from Member m")
+    @Query(value = "select m from Member m") // 카운트 쿼리와 매칭되서 카운트 쿼리로 사용된다.
+    Page<Member> findByAge(int age, Pageable pageable);
+    Slice<Member> findSliceByAge(int age, Pageable pageable);
 
 }
