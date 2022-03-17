@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -160,5 +161,28 @@ class MemberRepositoryTest {
         // then
         assertThat(results.size()).isEqualTo(2);
         
+    }
+    
+    @Test
+    public void returnType() throws Exception {
+        // given
+        Member member1 = new Member("member1");
+        member1.setAge(10);
+
+        Member member2 = new Member("member2");
+        member2.setAge(20);
+
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        // when
+        List<Member> findMember1 = memberRepository.findListByUsername("member1");
+        Member findMember2 = memberRepository.findMemberByUsername("member2");// 이름이 유니크 하다면 단건 조회
+        Optional<Member> findMember3 = memberRepository.findOptionalByUsername("aasdasd");
+
+        // then
+        System.out.println("findMember1 = " + findMember1); // 실무에선 Assertions로 검사
+        System.out.println("findMember2 = " + findMember2); // 실무에선 Assertions로 검사
+        System.out.println("findMember3 = " + findMember3.orElse(null)); // 실무에선 Assertions로 검사
     }
 }
