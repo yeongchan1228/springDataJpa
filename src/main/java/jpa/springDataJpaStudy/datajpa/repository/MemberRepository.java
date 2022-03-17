@@ -6,10 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import javax.persistence.NamedQuery;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -77,4 +77,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Page<Member> findByAge(int age, Pageable pageable);
     Slice<Member> findSliceByAge(int age, Pageable pageable);
 
+    /**
+     * 벌크 수정 쿼리
+     */
+    @Modifying // 이게 있어야 .getResultList()가 아닌 .executeUpdate() 등 다른 메서드가 실행됨
+    @Query(value = "update Member m set m.age = m.age + 1 where m.age >= :age")
+    int bulkAgePlus(@Param(value = "age") int age);
 }
