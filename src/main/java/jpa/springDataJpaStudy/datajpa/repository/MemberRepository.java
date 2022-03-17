@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.persistence.NamedQuery;
+import java.util.Collection;
 import java.util.List;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
@@ -44,4 +45,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select new jpa.springDataJpaStudy.datajpa.repository.dto" +
             ".MemberDto(m.id, m.username, t.name) from Member m join m.team t")
     List<MemberDto> findMemberDto();
+
+    /**
+     * 컬렉션 파라미터 바인딩
+     */
+    @Query("select m from Member m where m.username in :names")
+    List<Member> findByNames(@Param(value = "names") Collection<String> names);
+
 }
