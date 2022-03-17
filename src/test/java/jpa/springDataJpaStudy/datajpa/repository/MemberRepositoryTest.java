@@ -13,12 +13,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -27,6 +27,7 @@ class MemberRepositoryTest {
 
     @Autowired MemberRepository memberRepository;
     @Autowired TeamRepository teamRepository;
+    @Autowired EntityManager em;
 
     @Test
     public void basicCRUD() throws Exception {
@@ -251,5 +252,29 @@ class MemberRepositoryTest {
         List<Member> list = memberRepository.findListByAge(10, pageRequest);
         assertThat(list.size()).isEqualTo(3);
 
+    }
+
+    @Test
+    public void bulkAgePlus() throws Exception {
+        // given
+        Member member1 = new Member("member1");
+        member1.setAge(10);
+        Member member2 = new Member("member2");
+        member2.setAge(20);
+
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        // when
+        // 벌크 연산은 영속성 컨텍스트를 무시하고 실행하기 때문에 결과가 달라질 수 있어 항상 전에 영속성 컨텍스트를 비워야한다.
+        em.flush();
+        em.clear();
+
+        int result = memberRepository.bulkAgePlus(10);
+        Optional<Member> findMember = memberRepository.findById(member1.getId());
+
+        // then
+        assertThat(findMember.get().getAge()).isEqualTo(11);
+        assertThat(result).isEqualTo(2);
     }
 }

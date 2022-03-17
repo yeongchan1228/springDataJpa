@@ -8,7 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MemberJpaRepositoryTest {
     
     @Autowired MemberJpaRepository memberJpaRepository;
+    @Autowired EntityManager em;
     
     @Test
     public void basicCRUD() throws Exception {
@@ -108,5 +111,29 @@ class MemberJpaRepositoryTest {
         assertThat(findMembers.size()).isEqualTo(4);
         assertThat(count).isEqualTo(8);
         
+    }
+
+    @Test
+    public void bulkUpdate() throws Exception {
+        // given
+        Member member1 = new Member("member1");
+        member1.setAge(10);
+        Member member2 = new Member("member2");
+        member2.setAge(20);
+
+        memberJpaRepository.save(member1);
+        memberJpaRepository.save(member2);
+
+        // when
+        // 벌크 연산은 영속성 컨텍스트를 무시하고 실행하기 때문에 결과가 달라질 수 있어 항상 전에 영속성 컨텍스트를 비워야한다.
+        em.flush();
+        em.clear();
+
+        int result = memberJpaRepository.bulkAgePlus(10);
+        Optional<Member> findMember = memberJpaRepository.findById(member1.getId());
+
+        // then
+        assertThat(findMember.get().getAge()).isEqualTo(11);
+        assertThat(result).isEqualTo(2);
     }
 }
