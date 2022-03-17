@@ -6,6 +6,10 @@ import jpa.springDataJpaStudy.datajpa.repository.dto.MemberDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -184,5 +188,68 @@ class MemberRepositoryTest {
         System.out.println("findMember1 = " + findMember1); // 실무에선 Assertions로 검사
         System.out.println("findMember2 = " + findMember2); // 실무에선 Assertions로 검사
         System.out.println("findMember3 = " + findMember3.orElse(null)); // 실무에선 Assertions로 검사
+    }
+    
+    @Test
+    public void paging() throws Exception {
+        // given
+        Member member1 = new Member("member1");
+        member1.setAge(10);
+        Member member2 = new Member("member2");
+        member2.setAge(10);
+        Member member3 = new Member("member3");
+        member3.setAge(10);
+        Member member4 = new Member("member4");
+        member4.setAge(10);
+        Member member5 = new Member("member5");
+        member5.setAge(10);
+        Member member6 = new Member("member6");
+        member6.setAge(10);
+        Member member7 = new Member("member7");
+        member7.setAge(10);
+        Member member8 = new Member("member8");
+        member8.setAge(10);
+
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        memberRepository.save(member3);
+        memberRepository.save(member4);
+        memberRepository.save(member5);
+        memberRepository.save(member6);
+        memberRepository.save(member7);
+        memberRepository.save(member8);
+
+        // 0번 부터 3개, 유저 이름을 기반으로 오름차순으로 // 3으로 나누겠다. 3으로 페이징
+        PageRequest request = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+
+        // when
+        Page<Member> page = memberRepository.findByAge(10, request);
+        //API에서는 Dto로 결과를 반환해서 뿌려야 하므로
+        //page.map(member -> new MemberDto(member.getId() ...))
+
+        // then
+        assertThat(page.getContent().size()).isEqualTo(3);
+        assertThat(page.getTotalElements()).isEqualTo(8);
+        assertThat(page.getNumber()).isEqualTo(0); // 현재 페이지
+        assertThat(page.getTotalPages()).isEqualTo(3); // 3개로 나눴을 때 총 페이지
+        assertThat(page.isFirst()).isTrue(); // 해당 페이지 첫번 째 페이지인가.
+        assertThat(page.hasNext()).isTrue(); // 다음 페이지가 있는가
+
+        //
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+        PageRequest pageRequest2 = PageRequest.of(0, 8, Sort.by(Sort.Direction.DESC, "username"));
+
+        //slice는 3개가 아니라 +1인 4개를 가져온다. limit가 4개
+        Slice<Member> slice = memberRepository.findSliceByAge(10, pageRequest);
+        Slice<Member> slice2 = memberRepository.findSliceByAge(10, pageRequest2);
+
+        assertThat(slice.getContent().size()).isEqualTo(3);
+        assertThat(slice.hasNext()).isTrue();
+
+        assertThat(slice2.hasNext()).isFalse();
+
+        List<Member> list = memberRepository.findListByAge(10, pageRequest);
+        assertThat(list.size()).isEqualTo(3);
+
     }
 }
