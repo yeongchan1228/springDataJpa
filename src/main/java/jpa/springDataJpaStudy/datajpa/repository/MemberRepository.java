@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import javax.persistence.NamedQuery;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
@@ -51,5 +52,13 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
      */
     @Query("select m from Member m where m.username in :names")
     List<Member> findByNames(@Param(value = "names") Collection<String> names);
+
+    /**
+     * 반환 타입
+     * find~~~~ByUsername 가능
+     */
+    List<Member> findListByUsername(String username); // 리스트 조회
+    Member findMemberByUsername(String username); // 단건 조회
+    Optional<Member> findOptionalByUsername(String username); // Optional 단건 조회
 
 }
