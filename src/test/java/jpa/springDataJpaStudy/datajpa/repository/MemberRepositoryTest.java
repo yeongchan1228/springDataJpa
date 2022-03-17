@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -139,5 +140,25 @@ class MemberRepositoryTest {
         assertThat(memberDtos.get(0).getTeamname()).isEqualTo(member1.getTeam().getName());
         assertThat(memberDtos.get(1).getTeamname()).isEqualTo(member2.getTeam().getName());
 
+    }
+    
+    @Test
+    public void findByNames() throws Exception {
+        // given
+        Member member1 = new Member("member1");
+        member1.setAge(10);
+
+        Member member2 = new Member("member2");
+        member2.setAge(20);
+
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        // when
+        List<Member> results = memberRepository.findByNames(Arrays.asList(member1.getUsername(), member2.getUsername()));
+
+        // then
+        assertThat(results.size()).isEqualTo(2);
+        
     }
 }
