@@ -267,8 +267,8 @@ class MemberRepositoryTest {
 
         // when
         // 벌크 연산은 영속성 컨텍스트를 무시하고 실행하기 때문에 결과가 달라질 수 있어 항상 전에 영속성 컨텍스트를 비워야한다.
-        em.flush();
-        em.clear();
+//        em.flush();
+//        em.clear();
 
         int result = memberRepository.bulkAgePlus(10);
         Optional<Member> findMember = memberRepository.findById(member1.getId());
