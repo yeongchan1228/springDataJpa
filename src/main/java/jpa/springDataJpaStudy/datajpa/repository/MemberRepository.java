@@ -80,7 +80,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     /**
      * 벌크 수정 쿼리
      */
-    @Modifying // 이게 있어야 .getResultList()가 아닌 .executeUpdate() 등 다른 메서드가 실행됨
+//    @Modifying // 이게 있어야 .getResultList()가 아닌 .executeUpdate() 등 다른 메서드가 실행됨
+    @Modifying(clearAutomatically = true) // 영속성 컨텍스트를 자동으로 비워줌
     @Query(value = "update Member m set m.age = m.age + 1 where m.age >= :age")
     int bulkAgePlus(@Param(value = "age") int age);
 }
