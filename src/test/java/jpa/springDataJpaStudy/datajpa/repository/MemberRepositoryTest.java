@@ -277,4 +277,36 @@ class MemberRepositoryTest {
         assertThat(findMember.get().getAge()).isEqualTo(11);
         assertThat(result).isEqualTo(2);
     }
+
+    @Test
+    public void joinFetchTest() throws Exception {
+        // given
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+
+        Member member1 = new Member("memberA", 10, teamA);
+        Member member2 = new Member("memberB", 10, teamB);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+        
+        // when
+        // 쿼리를 멤버 찾는 쿼리 하나로 해결 가능
+        //List<Member> findMembers = memberRepository.findMemberFetchJoin();
+        //List<Member> findMembers = memberRepository.findAll();
+        //List<Member> findMembers = memberRepository.findMemberEntityGraph();
+        //List<Member> findMembers = memberRepository.findEntityGraphByUsername(member1.getUsername());
+        List<Member> findMembers = memberRepository.findEntityGraph2ByUsername(member1.getUsername());
+
+        // then
+        for (Member findMember : findMembers) {
+            System.out.println("findMember.getTeam().getClass() = " + findMember.getTeam().getClass());
+            System.out.println("findMember.getTeam().getName() = " + findMember.getTeam().getName());
+        }
+
+    }
 }
