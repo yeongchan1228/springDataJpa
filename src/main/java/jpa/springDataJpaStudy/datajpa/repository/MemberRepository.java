@@ -5,12 +5,11 @@ import jpa.springDataJpaStudy.datajpa.repository.dto.MemberDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -102,8 +101,21 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findMemberEntityGraph();
 
     @EntityGraph(attributePaths = {"team"})
-    List<Member> findEntityGraphByUsername(@Param(value = "username") String username);
+    List<Member> findEntityGraphByUsername(String username);
 
     @EntityGraph("Member.all")
-    List<Member> findEntityGraph2ByUsername(@Param(value = "username") String username);
+    List<Member> findEntityGraph2ByUsername(String username);
+
+    /**
+     * queryHint
+     */
+    @QueryHints(value = @QueryHint(name = "org.hibernate.readOnly", value = "true")) // 오직 읽는 것으로 조회, 변경 감지 X
+    Member findReadOnlyByUsername(String username);
+
+    /**
+     * Lock
+     */
+    @Lock(value = LockModeType.PESSIMISTIC_WRITE) // 동시성 제어를 위한 쓰기 락
+    List<Member> findLockByUsername(String username);
+
 }
