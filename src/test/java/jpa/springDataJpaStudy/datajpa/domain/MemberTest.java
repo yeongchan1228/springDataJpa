@@ -74,6 +74,28 @@ class MemberTest {
 
         // then
         System.out.println(findMember.getCreateDate());
-        System.out.println(findMember.getUpdateDate());
+        //System.out.println(findMember.getUpdateDate());
+    }
+
+    @Test
+    public void EventBaseEntity() throws Exception {
+        // given
+        Member member = new Member("memberA");
+        Member saveMember = memberRepository.save(member);// @PrePersist 실행
+
+        Thread.sleep(100);
+        saveMember.setUsername("memberB");
+
+        em.flush(); // @PreUpdate 실행
+        em.clear();
+
+        // when
+        Member findMember = memberRepository.findById(member.getId()).get();
+
+        // then
+        System.out.println(findMember.getCreateDate());
+        System.out.println(findMember.getLastModifiedDate());
+        System.out.println(findMember.getCreateBy());
+        System.out.println(findMember.getLastModifiedBy() );
     }
 }
