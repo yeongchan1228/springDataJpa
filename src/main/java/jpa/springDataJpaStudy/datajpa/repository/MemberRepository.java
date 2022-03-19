@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
 
 //    List<Member> findByUsername(String username); // 쿼리 메서드 기능 -> 이름 조회
 //    List<Member> findXXBy(); // 쿼리 메서드 기능 -> 전체 조회
