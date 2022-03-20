@@ -12,6 +12,13 @@ spring:
 #      show_sql: true
       format_sql: true
 
+# Pageable 디폴트 값 변경
+#  data:
+#    web:
+#      pageable:
+#        default-page-size: 10
+#        max-page-size: 1000
+
 logging:
   level:
     org.hibernate.SQL: debug
