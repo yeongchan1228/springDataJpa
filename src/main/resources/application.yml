@@ -9,8 +9,9 @@ spring:
     hibernate:
       ddl-auto: create
     properties:
-#      show_sql: true
-      format_sql: true
+      hibernate:
+#       show_sql: true
+        format_sql: true
 
 # Pageable 디폴트 값 변경
 #  data:
