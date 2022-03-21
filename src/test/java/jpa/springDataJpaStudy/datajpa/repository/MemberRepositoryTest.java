@@ -430,4 +430,33 @@ class MemberRepositoryTest {
             System.out.println("nestedColsedProjections.getTeam().getName() = " + nestedColsedProjections.getTeam().getName());
         }
     }
+    
+    @Test
+    public void nativeQuery() throws Exception {
+        // given
+        Team team = new Team("teamA");
+        teamRepository.save(team);
+
+        Member member1 = new Member("memberA", 0, team);
+        Member member2 = new Member("memberB", 0, team);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        // when
+        Member result = memberRepository.findByNativeQuery("memberA");
+        System.out.println("result = " + result.getClass());
+
+        Page<MemberProjection> results = memberRepository.findByNativeProjection(PageRequest.of(0, 10));
+        List<MemberProjection> content = results.getContent();
+        for (MemberProjection memberProjection : content) {
+            System.out.println("memberProjection.getUsername()  = " + memberProjection.getUsername() );
+            System.out.println("memberProjection.getTeamname()  = " + memberProjection.getTeamName() );
+        }
+
+        // then
+        
+    }
 }
