@@ -6,10 +6,7 @@ import jpa.springDataJpaStudy.datajpa.repository.dto.MemberDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -363,5 +360,35 @@ class MemberRepositoryTest {
 
         // then
         assertThat(findMembers.get(0).getUsername()).isEqualTo(member.getUsername());
+    }
+
+    @Test
+    public void queryByExample() throws Exception {
+        // given
+        Team team = new Team("teamA");
+        teamRepository.save(team);
+
+        Member member1 = new Member("memberA", 10, team);
+        Member member2 = new Member("memberB", 20, team);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        // when
+        //Probe 생성, 검색 조건 자체가 엔티티
+        Member member = new Member("memberA");
+
+        //null을 받을 수 없는 타입은 무시해야 한다.
+        ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("age");
+
+        Example<Member> example = Example.of(member, matcher);
+
+
+        List<Member> all = memberRepository.findAll(example );
+
+        // then
+        assertThat(all.get(0).getUsername()).isEqualTo("memberA");
     }
 }
