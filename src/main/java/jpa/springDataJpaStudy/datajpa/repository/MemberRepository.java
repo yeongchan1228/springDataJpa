@@ -118,4 +118,11 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
     @Lock(value = LockModeType.PESSIMISTIC_WRITE) // 동시성 제어를 위한 쓰기 락
     List<Member> findLockByUsername(String username);
 
+    /**
+     * Projections
+     */
+    List<UsernameOnly> findProjectionsByUsername(String username);
+    List<UsernameOnlyDto> findProjectionsDtoByUsername(String username);
+    // 위 메서드 2개를 합친 것
+    <T> List<T> findProjectionsAllByUsername(String username, Class<T> type);
 }
