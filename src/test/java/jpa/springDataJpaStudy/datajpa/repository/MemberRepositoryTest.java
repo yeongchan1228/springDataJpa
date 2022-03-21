@@ -391,4 +391,43 @@ class MemberRepositoryTest {
         // then
         assertThat(all.get(0).getUsername()).isEqualTo("memberA");
     }
+    
+    @Test
+    public void  projections() throws Exception {
+        // given
+        Team team = new Team("teamA");
+        teamRepository.save(team);
+
+        Member member1 = new Member("memberA", 0, team);
+        Member member2 = new Member("memberB", 0, team);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        // when
+        List<UsernameOnly> result1 = memberRepository.findProjectionsByUsername("memberA");
+        List<UsernameOnlyDto> result2 = memberRepository.findProjectionsDtoByUsername("memberA");
+        List<UsernameOnlyDto> result3 = memberRepository.findProjectionsAllByUsername("memberB", UsernameOnlyDto.class);
+        List<NestedColsedProjections> result4 = memberRepository.findProjectionsAllByUsername("memberB", NestedColsedProjections.class);
+
+        // then
+        for (UsernameOnly usernameOnly : result1) {
+            System.out.println("usernameOnly = " + usernameOnly.getUsername());
+        }
+
+        for (UsernameOnlyDto usernameOnlyDto : result2) {
+            System.out.println("usernameOnlyDto.getUsername() = " + usernameOnlyDto.getUsername());
+        }
+
+        for (UsernameOnlyDto usernameOnlyDto : result3) {
+            System.out.println("usernameOnlyDto.getUsername() = " + usernameOnlyDto.getUsername());
+        }
+
+        for (NestedColsedProjections nestedColsedProjections : result4) {
+            System.out.println("nestedColsedProjections.getUsername() = " + nestedColsedProjections.getUsername());
+            System.out.println("nestedColsedProjections.getTeam().getName() = " + nestedColsedProjections.getTeam().getName());
+        }
+    }
 }
