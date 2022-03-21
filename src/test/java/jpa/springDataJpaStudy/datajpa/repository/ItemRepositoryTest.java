@@ -16,8 +16,18 @@ class ItemRepositoryTest {
 
     @Test
     public void checkPk() throws Exception {
+//        // given
+//        Item item = new Item();
+//        // when
+//        itemRepository.save(item);
+//        // then
+
+    }
+
+    @Test
+    public void checkPk2() throws Exception {
         // given
-        Item item = new Item();
+        Item item = new Item("A");
         // when
         itemRepository.save(item);
         // then
